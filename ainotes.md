@@ -212,98 +212,98 @@
 
 2.	Absolute v. Conditional independence
 
-		Absolute independence is coin flips. No one coin flip has an effect on subsequent ones (barring wierdness where you damage the coin).
+	Absolute independence is coin flips. No one coin flip has an effect on subsequent ones (barring wierdness where you damage the coin).
 
-		Conditional independence is where you have some other variable, which if you take for a given, two other variables are independent. If you have cancer, one the first test has the same chance as the second. But if you didn't know you had cancer, the first test changes the likelihood of the second test being positive or negative.
+	Conditional independence is where you have some other variable, which if you take for a given, two other variables are independent. If you have cancer, one the first test has the same chance as the second. But if you didn't know you had cancer, the first test changes the likelihood of the second test being positive or negative.
 
-		If a pair of variables are absolutely independent, this does NOT imply are also conditionally independent. Nor the other way around.
+	If a pair of variables are absolutely independent, this does NOT imply are also conditionally independent. Nor the other way around.
 
 3.	Explaining away
 
-		Suppose two independent variables can cause the same effect. I could be happy because it is a sunny day, or I could be happy if I get a raise, or I could be happy because both occur.
+	Suppose two independent variables can cause the same effect. I could be happy because it is a sunny day, or I could be happy if I get a raise, or I could be happy because both occur.
 
-		Given that I am happy AND sunny weather, the sunny weather could "explain away" the cause of happiness. It becomes less likely that I got a raise. 
+	Given that I am happy AND sunny weather, the sunny weather could "explain away" the cause of happiness. It becomes less likely that I got a raise. 
 
-		On the other hand, if I am happy, and it is rainy, it is more likely that I got a raise than the normal probability of getting a raise would suggest.
+	On the other hand, if I am happy, and it is rainy, it is more likely that I got a raise than the normal probability of getting a raise would suggest.
 
-		The upshot is that if you observe the effect (I am happy) and some other relevant causal information (sunny, rainy, raise, no raise), then that information can impact the probability of other potential causes. 
+	The upshot is that if you observe the effect (I am happy) and some other relevant causal information (sunny, rainy, raise, no raise), then that information can impact the probability of other potential causes. 
 
-		So what is the probability I got a raise, given than I am happy and it is sunny? Also given the following.
-			
-			P(S) = 0.7
-			P(R) = 0.01
-			P(H|S,R) = 1
-			P(H|!S,R) = 0.9
-			P(H|S,!R) = 0.7
-			P(H|!S, !R) = 0.1
-			
-		Well, lets think about the target_outcomes and total_outcomes. What we want is the probability of a raise, given it is sunny and I am happy. Normally, the probability would be just P(R), but it is less now that the happiness can be explained away by the sun.
-
-		With Bayes theorem, you can expand any problem like this. The basics of it is taking the counterfactual and the probability of it happening (the numerator) and dividing that by the total probability of the given variables. The 'A' and 'B' can be anything.
-
-			P(A|B) = P(B|A) * P(A) / P(B)
-
-		So if we plug that in like so
-
-			P(A|B) = P(R|H,S)
-
-		We can fill in the rest
-
-			P(R|H,S) = P(H|R,S) * P(R|S) / P(H|S)
-
-		The chances I am happy GIVEN it is sunny are:
-
-			P(H|S) 	= P(H|S,R) * P(R) + P(H|S,!R) * P(!R)
-					= (1 * 0.01) + (0.7 * 0.99)
-					= 0.703
+	So what is the probability I got a raise, given than I am happy and it is sunny? Also given the following.
 		
-		Notice you didn't have to also multiply the first two pieces by P(S)? Well the whole problem is based on S as a given! P(H|S).
-
-		R and S are independent, so P(R|S) = P(R). P(H|R,S) = P(H|S,R) = 1, so
+		P(S) = 0.7
+		P(R) = 0.01
+		P(H|S,R) = 1
+		P(H|!S,R) = 0.9
+		P(H|S,!R) = 0.7
+		P(H|!S, !R) = 0.1
 		
-		P(R|H,S) 	= 1 * 0.01 / 0.703
-					= 0.0142
+	Well, lets think about the target_outcomes and total_outcomes. What we want is the probability of a raise, given it is sunny and I am happy. Normally, the probability would be just P(R), but it is less now that the happiness can be explained away by the sun.
+
+	With Bayes theorem, you can expand any problem like this. The basics of it is taking the counterfactual and the probability of it happening (the numerator) and dividing that by the total probability of the given variables. The 'A' and 'B' can be anything.
+
+		P(A|B) = P(B|A) * P(A) / P(B)
+
+	So if we plug that in like so
+
+		P(A|B) = P(R|H,S)
+
+	We can fill in the rest
+
+		P(R|H,S) = P(H|R,S) * P(R|S) / P(H|S)
+
+	The chances I am happy GIVEN it is sunny are:
+
+		P(H|S) 	= P(H|S,R) * P(R) + P(H|S,!R) * P(!R)
+				= (1 * 0.01) + (0.7 * 0.99)
+				= 0.703
+	
+	Notice you didn't have to also multiply the first two pieces by P(S)? Well the whole problem is based on S as a given! P(H|S).
+
+	R and S are independent, so P(R|S) = P(R). P(H|R,S) = P(H|S,R) = 1, so
+	
+	P(R|H,S) 	= 1 * 0.01 / 0.703
+				= 0.0142
 
 4.	This is it. This is the part where they try to bring their class size from 140K to like 12 diehards. So what is P(R|H) and this is "really complicated"
 
-			P(S) = 0.7
-			P(R) = 0.01
-			P(H|S,R) = 1
-			P(H|!S,R) = 0.9
-			P(H|S,!R) = 0.7
-			P(H|!S, !R) = 0.1
+		P(S) = 0.7
+		P(R) = 0.01
+		P(H|S,R) = 1
+		P(H|!S,R) = 0.9
+		P(H|S,!R) = 0.7
+		P(H|!S, !R) = 0.1
 
-		Okay, well I got P(H|S) by means of this bit.
+	Okay, well I got P(H|S) by means of this bit.
 
-			P(H|S) 	= P(H|S,R) * P(R) + P(H|S,!R) * P(!R)
-			= (1 * 0.01) + (0.7 * 0.99)
-			= 0.703
+		P(H|S) 	= P(H|S,R) * P(R) + P(H|S,!R) * P(!R)
+		= (1 * 0.01) + (0.7 * 0.99)
+		= 0.703
 
-		It ISN'T just the 1-P(H|S), because it isn't given that P(R|H) is sunny. But we should be able to figure it out in the same fashion. Right? Well, no, but we can get all Bayesian up in this house.
+	It ISN'T just the 1-P(H|S), because it isn't given that P(R|H) is sunny. But we should be able to figure it out in the same fashion. Right? Well, no, but we can get all Bayesian up in this house.
 
-			P(R|H) 	= P(H|R) * P(R) / P(H|R) * P(R) + P(H|!R) * P(!R) 
+		P(R|H) 	= P(H|R) * P(R) / P(H|R) * P(R) + P(H|!R) * P(!R) 
 
-		Wait, do we have to consider the weather at all? I mean, if it is sunny, it is LESS likely I'm happy because of the raise. Well, turns out just trying to calculate the bottom portion brings that mess in.
-			
-			P(H|R) 	= P(H|S,R) * P(S) + P(H|!S,R) * P(!S)
-					= 1 * 0.7 + 0.9 * 0.3
-					= 0.97
-
-			P(H|!R) = P(H|S,!R) * P(S) + P(H|!S,!R) * P(!S)
-					= 0.7 * 0.7 + 0.1 * 0.3
-					= 0.52
-
-			P(R|H) 	= P(H|R) * P(R) / P(H|R) * P(R) + P(H|!R) * P(!R)
-					= 0.97 * 0.01 / (0.97 * 0.01 + 0.52 * 0.99)
-					= 0.018
+	Wait, do we have to consider the weather at all? I mean, if it is sunny, it is LESS likely I'm happy because of the raise. Well, turns out just trying to calculate the bottom portion brings that mess in.
 		
-		I got this right the first time. Apparently that is pretty impressive, however, it is tempered by the fact I am pretty sure I got everything else in the AI lecture quizzes wrong for this section.
+		P(H|R) 	= P(H|S,R) * P(S) + P(H|!S,R) * P(!S)
+				= 1 * 0.7 + 0.9 * 0.3
+				= 0.97
 
-		Last question. What is the probability of getting a raise, given that it is not sunny and I am happy. This tells you the maximum chance of having gotten a raise, given these values.
+		P(H|!R) = P(H|S,!R) * P(S) + P(H|!S,!R) * P(!S)
+				= 0.7 * 0.7 + 0.1 * 0.3
+				= 0.52
 
-		P(R|H,!S) 	= P(H|R,!S) * P(R) / (P(H|R,!S) * P(R) +  (P(H|!R,!S) * P(!R))
-					= 0.9 * 0.01 / (0.9 * 0.01 + 0.1 * 0.99)
-					= 0.083
+		P(R|H) 	= P(H|R) * P(R) / P(H|R) * P(R) + P(H|!R) * P(!R)
+				= 0.97 * 0.01 / (0.97 * 0.01 + 0.52 * 0.99)
+				= 0.018
+	
+	I got this right the first time. Apparently that is pretty impressive, however, it is tempered by the fact I am pretty sure I got everything else in the AI lecture quizzes wrong for this section.
+
+	Last question. What is the probability of getting a raise, given that it is not sunny and I am happy. This tells you the maximum chance of having gotten a raise, given these values.
+
+	P(R|H,!S) 	= P(H|R,!S) * P(R) / (P(H|R,!S) * P(R) +  (P(H|!R,!S) * P(!R))
+				= 0.9 * 0.01 / (0.9 * 0.01 + 0.1 * 0.99)
+				= 0.083
 
 5.	The takeaway, mindblowing part is that only when we know about the other variable, does it make a difference. When happiness is unknown, the actual chances of say getting a raise is independent of the weather P(R|S) = P(R). S and R become dependent the moment you know the happiness. 
 
@@ -321,14 +321,14 @@
 
 	Each incoming edge defines the dependence of the node's probability.
 
-		A network defined by these edges
+	A network defined by these edges
 		
 		A->C
 		B->C
 		C->D
 		C->E
 
-		Has these probabilities for each node
+	Has these probabilities for each node
 
 		A = P(A)
 		B = P(B)
@@ -336,7 +336,7 @@
 		D = P(D|C)
 		E = P(E|C)
 
-		The joint probability would be 
+	The joint probability would be 
 
 		P(A,B,C,D,E) = P(A) * P(B) * P(C|A,B) * P(D|C) * P(E|C)
 
@@ -350,18 +350,18 @@
 
 2.	How many values are required for this graph?
 
-	A->B->E
-	A->C->F
-	A->D->F
+		A->B->E
+		A->C->F
+		A->D->F
 
-	A = P(A)
-	B = P(B|A), P(B|!A)
-	E = P(E|B), P(E|!B)
-	C = P(C|A), P(C|!A)
-	D = P(D|A), P(D|!A)
-	F = P(F|C,D), P(F|C,!D), P(F|!C,D), P(F|!C,!D)
+		A = P(A)
+		B = P(B|A), P(B|!A)
+		E = P(E|B), P(E|!B)
+		C = P(C|A), P(C|!A)
+		D = P(D|A), P(D|!A)
+		F = P(F|C,D), P(F|C,!D), P(F|!C,D), P(F|!C,!D)
 
-	= 13
+		= 13
 
 	Given binary variables, it is always 2^incoming_edges
 
@@ -379,13 +379,13 @@
 
 	Active = render things dependent.
 
-	A->B->C
+		A->B->C
 
 	A and C are dependent, if all variables are known.
 
 	Inactive = render things independent.
 
-	A->B->C
+		A->B->C
 
 	If B is know, but A and C are not, those variables become independent.
 
@@ -394,11 +394,11 @@
 ##	HW2
 1.	Bayes Rule
 
-P(B) = P(B|A) * P(A) + P(B|!A) * P(!A)
-P(A|B) 	= P(B|A) * P(A) / P(B)
-		= P(B|A) * P(A) / P(B|A) * P(A) + P(B|!A) * P(!A)
-		= 0.2 * 0.5 / (0.2 * 0.5 + 0.8 * 0.5)
-		= 0.2
+		P(B) = P(B|A) * P(A) + P(B|!A) * P(!A)
+		P(A|B) 	= P(B|A) * P(A) / P(B)
+				= P(B|A) * P(A) / P(B|A) * P(A) + P(B|!A) * P(!A)
+				= 0.2 * 0.5 / (0.2 * 0.5 + 0.8 * 0.5)
+				= 0.2
 
 2.	Simple Bayes Net
 
@@ -415,13 +415,13 @@ P(A|B) 	= P(B|A) * P(A) / P(B)
 
 	What is P(A|X1, X2, X3)?
 
-		Multiplication of the preconditions is allowed. Given A, there is conditional independence.
+	Multiplication of the preconditions is allowed. Given A, there is conditional independence.
 
 			Prior	X1	X2	!X3	P1		
 		A 	0.5 	0.2 0.2 0.8 0.016 	Remember, this is simply the top bit of Bayes rule
 		!A 	0.5 	0.6 0.6 0.4 0.072
 
-		Add the P1 together, then divide by P1:
+	Add the P1 together, then divide by P1:
 		0.016 + 0.072 = 0.088			And this is just the bottom bit of Bayes rule
 
 		0.016 / 0.088 = 0.181818 <- P(A|X1, X2, X3), the answer
@@ -458,7 +458,7 @@ P(A|B) 	= P(B|A) * P(A) / P(B)
 
 		0.2 * (0.2 * P(A|X2) + 0.6 * P(!A|X2)) + 
 		0.6 * (0.2 * P(A|X2) + 0.6 * P(!A|X2))
-	
+
 	That vastly simplifies things. Now we just need to find P(A|X). Bayes to the rescue.
 
 		P(A|X) = P(X|A) * P(A) / P(X)
@@ -467,7 +467,7 @@ P(A|B) 	= P(B|A) * P(A) / P(B)
 		P(A|X) 	= P(X|A) * P(A) / P(X|A) * P(A) + P(X|!A) * P(!A)
 				= 0.2 * 0.5 / (0.2 * 0.5 + 0.6 * 0.5)
 				= 0.25
-	
+
 	Plug that jazz in
 
 		P(X3|X1) 	= 0.2 * (0.2 * 0.25 + 0.6 * 0.75) + 0.6 * (0.2 * 0.25 + 0.6 * 0.75) / P(X)
@@ -485,7 +485,7 @@ P(A|B) 	= P(B|A) * P(A) / P(B)
 
 	Given some vector of data (x1, x2, x_n) and the result y, predict future y values given any x values.
 
-	f(x_m) = y_m
+		f(x_m) = y_m
 
 	The x values might be pixels in a vision learning program, or expert system for choosing mortgage rates, or whatever.
 
@@ -532,81 +532,81 @@ P(A|B) 	= P(B|A) * P(A) / P(B)
 
 	Example:
 		
-			k=1
-			Where data = 1 message, 1 spam 
+		k=1
+		Where data = 1 message, 1 spam 
 
-			P(Spam) 
-			= count(Spam)+k / count(Spam)+k + count(ham)+k
-			= 1 / 1 + 2
-			= 2 / 3
+		P(Spam) 
+		= count(Spam)+k / count(Spam)+k + count(ham)+k
+		= 1 / 1 + 2
+		= 2 / 3
 
-		Where data = 10 message, 6 spam 
+	Where data = 10 message, 6 spam 
 
-			P(Spam) 
-			= count(Spam)+k / count(Spam)+k + count(ham)+k
-			= 6 / 6 + 4 + 2
-			= 0.5833
+		P(Spam) 
+		= count(Spam)+k / count(Spam)+k + count(ham)+k
+		= 6 / 6 + 4 + 2
+		= 0.5833
 
-		Where data = 100 message, 60 spam 
+	Where data = 100 message, 60 spam 
 
-			P(Spam) 
-			= count(Spam)+k / (count(Spam) + count(ham)) + 2
-			= 60 + 1 / 60 + 40 + 1
-			= 0.5986
+		P(Spam) 
+		= count(Spam)+k / (count(Spam) + count(ham)) + 2
+		= 60 + 1 / 60 + 40 + 1
+		= 0.5986
 
 	You have to be careful about classes. For instance, if you are comparing total messages, then you would have the classes "spam" and "ham". But if your target was the probability of a particular word, then the number of unique classes is 12; the set of unique words.
 
 	Assume the question is asking for the probability of a word in a spam message being "secret" NOT the probability that a spam message contains the word secret.
 
-			k = 1
-			vocab = 12
+		k = 1
+		vocab = 12
 
-		Messages
-			P(Spam) = 
-			= three spam messages + k / eight total messages + k*2 (two kinds of messages)
-			= 3 + 1 / 8 + 2
-			= 4 / 10
+	Messages
+		P(Spam) = 
+		= three spam messages + k / eight total messages + k*2 (two kinds of messages)
+		= 3 + 1 / 8 + 2
+		= 4 / 10
 
-			P(Ham) = 1-P(Spam) = 6 / 10
+		P(Ham) = 1-P(Spam) = 6 / 10
 
-		Words are a little different. You still go back to 
-			
-			target_outcomes/total_outcomes
+	Words are a little different. You still go back to 
 		
-		But you also add the class normalizer k. In this case, you look at the occurances of a specific word in spam + k, and divide that by occurances of all words in spam and add in every unique kind of word in the whole dataset.
+		target_outcomes/total_outcomes
+	
+	But you also add the class normalizer k. In this case, you look at the occurances of a specific word in spam + k, and divide that by occurances of all words in spam and add in every unique kind of word in the whole dataset.
 
-			Number of unique words = 12
+		Number of unique words = 12
 
-			P("today"|Spam)
-			= occurances of "today" in spam + k / all words in spam + unique words
-			= (spam.count("today") + 1) / (len(spam) + 12)
-			= 0.0476
+		P("today"|Spam)
+		= occurances of "today" in spam + k / all words in spam + unique words
+		= (spam.count("today") + 1) / (len(spam) + 12)
+		= 0.0476
 
-			P("today"|Ham) 
-			= (ham.count("today") + 1) / (len(ham) + 12)
-			= 3 / 27
+		P("today"|Ham) 
+		= (ham.count("today") + 1) / (len(ham) + 12)
+		= 3 / 27
 
-		Twelve different words, twelve classes.
+	Twelve different words, twelve classes.
 
 	Okay, even harder one. Given M = "today is secret", and k = 1, what is P(spam|M)?
 
-		Well, it should be multiplication, similar to ML with multiple inputs and adding the Laplace value at every step
-			
-			P("today"|Spam) 	= (spam.count("today")*1.0 + 1) / (len(spam) + 12)
-			P("is"|Spam) 		= (spam.count("is")*1.0 + 1) / (len(spam) + 12)
-			P("secret"|Spam) 	= (spam.count("secret")*1.0 + 1) / (len(spam) + 12) 
-			P(Spam) = total spam messages + 1 / total messages + 2 = 0.4
+	Well, it should be multiplication, similar to ML with multiple inputs and adding the Laplace value at every step
+		
+		P("today"|Spam) 	= (spam.count("today")*1.0 + 1) / (len(spam) + 12)
+		P("is"|Spam) 		= (spam.count("is")*1.0 + 1) / (len(spam) + 12)
+		P("secret"|Spam) 	= (spam.count("secret")*1.0 + 1) / (len(spam) + 12) 
+		P(Spam) = total spam messages + 1 / total messages + 2 = 0.4
 
-			p1 	= P("today"|Spam) * P("is"|Spam) * P("secret"|Spam) * P(Spam)
-				= 0.0476 * 0.095 * 0.190 * 0.4
-				= 0.000345
+		p1 	= P("today"|Spam) * P("is"|Spam) * P("secret"|Spam) * P(Spam)
+			= 0.0476 * 0.095 * 0.190 * 0.4
+			= 0.000345
 
-			p2 	= P("today"|Ham) + P("is"|Ham) * P("secret"|Ham) * P(Ham)
-				= 	((ham.count("today")*1.0 + 1.0) / (len(ham) + 12.0)) * ((ham.count("is")*1.0 + 1.0) / (len(ham) + 12.0)) * ((ham.count("secret")*1.0 + 1.0) / (len(ham) + 12.0)) 
-					* 0.6
-				= 0.000365
+		p2 	= P("today"|Ham) + P("is"|Ham) * P("secret"|Ham) * P(Ham)
+			= 	((ham.count("today")*1.0 + 1.0) / (len(ham) + 12.0)) * ((ham.count("is")*1.0 + 1.0) / (len(ham) + 12.0)) * ((ham.count("secret")*1.0 + 1.0) / (len(ham) + 12.0)) 
+				* 0.6
+			= 0.000365
 
-			p1 / (p1 + p2) = 0.4857
+		p1 / (p1 + p2) = 0.4857
 
 	3.	Digit recognition
 
@@ -659,11 +659,11 @@ Dealing with contineous quantities. Like predicting the temperature.
 
 	P and Q are statements that can be false or true.
 
-	!P is true when P is false
-	P || Q is true as long as either P or Q is true
-	P && Q is true only when both P and Q are true
-	P => Q is false only when P is true and Q is false
-	P <=> Q is true when P and Q have the same value (both are true or both are false)
+		!P is true when P is false
+		P || Q is true as long as either P or Q is true
+		P && Q is true only when both P and Q are true
+		P => Q is false only when P is true and Q is false
+		P <=> Q is true when P and Q have the same value (both are true or both are false)
 
 2.	Terminology
 
@@ -719,11 +719,11 @@ Dealing with contineous quantities. Like predicting the temperature.
 
 1.	How's it work?
 
-Complex objects, not simple boolean states. Values are called constants, and they can refer to objects. There are also functions. Functions are mappings from objects to objects. 
+	Complex objects, not simple boolean states. Values are called constants, and they can refer to objects. There are also functions. Functions are mappings from objects to objects. 
 
-There are also relations, which are more or less exactly what you think they are.
+	There are also relations, which are more or less exactly what you think they are.
 
-The other significant part is the inclusion of quantifiers. ForAll is an upsidedown A and ThereExists which is an backwards E.
+	The other significant part is the inclusion of quantifiers. ForAll is an upsidedown A and ThereExists which is an backwards E.
 
 2.	The power
 
