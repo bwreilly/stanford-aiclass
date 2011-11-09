@@ -618,39 +618,39 @@ P(A|B) 	= P(B|A) * P(A) / P(B)
 
 ###	Regression
 
-	Dealing with contineous quantities. Like predicting the temperature.
+Dealing with contineous quantities. Like predicting the temperature.
 
-	1. 	Definitions
+1. 	Definitions
+	
+	Loss factor = residual error, essentially. Also known as quadratic loss
+
+		sum(trainingdata) * (y_j - prediction)^2
+
+2.	Minimizing loss
+
+	For f(x) = w1*x+w0, you can minimize (find the w values) with these equasions
+
+		M = number of training examples	
+		x = the x set
+		y = the y set
+		xl = [q**2 for q in x]
+		xy = sum([a * b for a, b in zip(x,y)]) #x1*y1 + x2*y2 + ...x_n*y_n
+
+		w1 = (M * sum(xy) - sum(x)*sum(y)) / (M * sum(xl)) - (sum(x)**2))
+
+		w0 = (1/M) * sum(y) - (w1/M)*sum(x)
 		
-		Loss factor = residual error, essentially. Also known as quadratic loss
 
-			sum(trainingdata) * (y_j - prediction)^2
+	So for example
+	
+		x = [3, 6, 4, 5]
+		y = [0, -3, -1, -2]
 
-	2.	Minimizing loss
-
-		For f(x) = w1*x+w0, you can minimize (find the w values) with these equasions
-
-			M = number of training examples	
-			x = the x set
-			y = the y set
-			xl = [q**2 for q in x]
-			xy = sum([a * b for a, b in zip(x,y)]) #x1*y1 + x2*y2 + ...x_n*y_n
-
-			w1 = (M * sum(xy) - sum(x)*sum(y)) / (M * sum(xl)) - (sum(x)**2))
-
-			w0 = (1/M) * sum(y) - (w1/M)*sum(x)
-			
-
-		So for example
+		w1 	= ((4 * -32) - (18 * -6)) / ((4 * 86) - 324)
+			= -1
 		
-			x = [3, 6, 4, 5]
-			y = [0, -3, -1, -2]
-
-			w1 	= ((4 * -32) - (18 * -6)) / ((4 * 86) - 324)
-				= -1
-			
-			w0 	= (1/4) * -6 - (-1 / 4) * 18
-				= 3.0
+		w0 	= (1/4) * -6 - (-1 / 4) * 18
+			= 3.0
 #	Logic
 
 ##	Propositional Logic
@@ -717,67 +717,67 @@ P(A|B) 	= P(B|A) * P(A) / P(B)
 
 ##	First-Order Logic
 
-	1.	How's it work?
+1.	How's it work?
 
-	Complex objects, not simple boolean states. Values are called constants, and they can refer to objects. There are also functions. Functions are mappings from objects to objects. 
+Complex objects, not simple boolean states. Values are called constants, and they can refer to objects. There are also functions. Functions are mappings from objects to objects. 
 
-	There are also relations, which are more or less exactly what you think they are.
+There are also relations, which are more or less exactly what you think they are.
 
-	The other significant part is the inclusion of quantifiers. ForAll is an upsidedown A and ThereExists which is an backwards E.
+The other significant part is the inclusion of quantifiers. ForAll is an upsidedown A and ThereExists which is an backwards E.
 
-	2.	The power
+2.	The power
 
-		Otherwise complex or unbounded statements can be created with first order logic. If you wanted to say there was no dirt in the vacuum world, it is a one-liner
+	Otherwise complex or unbounded statements can be created with first order logic. If you wanted to say there was no dirt in the vacuum world, it is a one-liner
 
-			ForAll(d, l) Dirt(d) && Loc(l) => !At(d, l)
+		ForAll(d, l) Dirt(d) && Loc(l) => !At(d, l)
 
-		Which roughly translates into "for all variables d and l, if d is dirt and l is a location, there is no d at l". 
+	Which roughly translates into "for all variables d and l, if d is dirt and l is a location, there is no d at l". 
 
-		If you want to say the vacuum is in a location with dirt
+	If you want to say the vacuum is in a location with dirt
 
-			ThereExists(l, d), Dirt(d) && Loc(l) && At(V,l) && At(d,l)
+		ThereExists(l, d), Dirt(d) && Loc(l) && At(V,l) && At(d,l)
 
-		Or, "for some l and d, d is dirt and l is some location and the vacuum is at l and the d is at l".
+	Or, "for some l and d, d is dirt and l is some location and the vacuum is at l and the d is at l".
 
-	3.	Examples
+3.	Examples
 
-			ThereExists(x, y) x=y
+		ThereExists(x, y) x=y
 
-		This is always true. Remember that x and y are variables. They might reference the same object. Since they can, and you are asking the question "for all objects", it's always true.
+	This is always true. Remember that x and y are variables. They might reference the same object. Since they can, and you are asking the question "for all objects", it's always true.
 
-			(ThereExists(x), x=x) => (ForAll(y), ThereExists(z), y=z)
+		(ThereExists(x), x=x) => (ForAll(y), ThereExists(z), y=z)
 
-		First bit is always true. If x can mean anything, it can always be itself. Second bit is also always true. ForAll(y) means for every possible value of y. ThereExists(z) means all possible values z could be. The variable z could always be referencing whatever y is referencing.
+	First bit is always true. If x can mean anything, it can always be itself. Second bit is also always true. ForAll(y) means for every possible value of y. ThereExists(z) means all possible values z could be. The variable z could always be referencing whatever y is referencing.
 
-			ForAll(x), P(x) || !P(x)
+		ForAll(x), P(x) || !P(x)
 
-		Everything either has to be in the relation of P or not.
-		
-			ThereExists(x), P(x)
+	Everything either has to be in the relation of P or not.
+	
+		ThereExists(x), P(x)
 
-		This isn't necessarily true. There are empty relations, so it is possible that there are no objects x can reference that is a member of P.
+	This isn't necessarily true. There are empty relations, so it is possible that there are no objects x can reference that is a member of P.
 
-	4.	English Motherfucker do you speak it?
+4.	English motherf...etc
 
-		A lot of this stuff can be represented in english incorrectly. Here are some examples
+	A lot of this stuff can be represented in english incorrectly. Here are some examples
 
-			"Sam has two jobs."
+		"Sam has two jobs."
 
-			ThereExists(x,y), Job(Sam, x) && Job(Sam, y) && !(x=y)
+		ThereExists(x,y), Job(Sam, x) && Job(Sam, y) && !(x=y)
 
-		Breaking this down. For some x and y, the relation Job includes Sam and x in addition to Sam and y. And x and y are not the same. That seems to work.
+	Breaking this down. For some x and y, the relation Job includes Sam and x in addition to Sam and y. And x and y are not the same. That seems to work.
 
-		How about set membership? Consider both these statements together.
+	How about set membership? Consider both these statements together.
 
-		ForAll(x,s) Member(x, Add(x,s)) 
-		ForAll(x,s) Member(x,s) => (ForAll(y), Member(x, Add(y,s)))
+	ForAll(x,s) Member(x, Add(x,s)) 
+	ForAll(x,s) Member(x,s) => (ForAll(y), Member(x, Add(y,s)))
 
-		This doesn't work. It tells you what IS a member of x, but it doesn't tell you what x is not a member of.
+	This doesn't work. It tells you what IS a member of x, but it doesn't tell you what x is not a member of.
 
-		Now checkers. Define adjacency.
+	Now checkers. Define adjacency.
 
-		ForAll(x,y) Adj(Sq(x,y)), Sq(+ (x , 1)) && Adj(Sq(x,y), Sq(x, +(y,1)))
+	ForAll(x,y) Adj(Sq(x,y)), Sq(+ (x , 1)) && Adj(Sq(x,y), Sq(x, +(y,1)))
 
-		This doesn't work either. It does squares that are above and to the right, but it doesn't define what isn't adjacent to x and y or squares below and to the left. 
+	This doesn't work either. It does squares that are above and to the right, but it doesn't define what isn't adjacent to x and y or squares below and to the left. 
 
-		Lesson here? For more complex statements and rules, you are more likely to see the biconditional <=>, as it eliminates the inclusive nature of implications in one direction.
+	Lesson here? For more complex statements and rules, you are more likely to see the biconditional <=>, as it eliminates the inclusive nature of implications in one direction.
