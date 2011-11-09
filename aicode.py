@@ -4,9 +4,7 @@ def product(a,b):
 def bayes(positive, negative):
 	def P(P1, P2): 
 		return P1 / (P1 + P2)
-	
-	def product(a,b): 
-		return a*b
+
 	p1 = reduce(product, positive)
 	p2 = reduce(product, negative)
 	print p1, p2
