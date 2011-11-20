@@ -769,15 +769,281 @@ Dealing with contineous quantities. Like predicting the temperature.
 
 	How about set membership? Consider both these statements together.
 
-	ForAll(x,s) Member(x, Add(x,s)) 
-	ForAll(x,s) Member(x,s) => (ForAll(y), Member(x, Add(y,s)))
+		ForAll(x,s) Member(x, Add(x,s)) 
+		ForAll(x,s) Member(x,s) => (ForAll(y), Member(x, Add(y,s)))
 
 	This doesn't work. It tells you what IS a member of x, but it doesn't tell you what x is not a member of.
 
 	Now checkers. Define adjacency.
 
-	ForAll(x,y) Adj(Sq(x,y)), Sq(+ (x , 1)) && Adj(Sq(x,y), Sq(x, +(y,1)))
+		ForAll(x,y) Adj(Sq(x,y)), Sq(+ (x , 1)) && Adj(Sq(x,y), Sq(x, +(y,1)))
 
 	This doesn't work either. It does squares that are above and to the right, but it doesn't define what isn't adjacent to x and y or squares below and to the left. 
 
 	Lesson here? For more complex statements and rules, you are more likely to see the biconditional <=>, as it eliminates the inclusive nature of implications in one direction.
+
+#	Planning Under Uncertainty
+
+1.	Markov Decision Processes
+	
+	States and actions like all planning.
+
+	And state transition matrices 
+	
+		T(s, a, s1) 
+	
+	Or how you get from what state to another. But we are talking about stocastic environments so it is the probability of getting from some state to another, given some initial state and actions. 
+
+		P(s1|a,s)
+
+	Reward functions rather than goal states.
+
+		R(s)
+
+	You create polices rather than plans, by assigning states relative values via value iteration. Then it's just hill climbing
+
+2.	Value iteration
+
+	For each state S, the value of the state is the sum of the expected future reward
+
+		V(s) = E[sum(a**t)]
+
+	Value iteration is the algorithm to generate the optimal policy. Consider a state that is one action away from a big reward state (+100), and the cost for any action is -3. Suppose there is an 80% chance of the action to move to the goal of working. 
+
+		V(s, E) = 0.8 * 100 - 3 = 77
+
+	You can propogate the values backwards to the initial state. The full algorithm is this:
+
+		V(s) = max( sum(P(s1|s,a)V(s1)) ) + R(s))
+		
+		def valueiteration(s): 
+			suc = s.successors
+			def expectedvalue(action):
+				states = action.possiblestates
+				return sum([s.reward * s.probability for s in states])
+			return max([expectedvalue(a) for a in s.actions]) + s.reward
+
+	Or the sum of the probabilities of that values of the successor states, adding the reward (sometimes a cost) of the given state. The steps are:
+
+		If s is a terminal state, return reward for that state
+		For each successor state:
+			Compute a value based on the probability of reaching the state, given an action to get there
+			Remember that action and its expected value
+		Find the action with the greatest expected value, add the cost/reward to get there
+	
+	Simple as that.
+
+#	Reinforcement Learning
+
+1.	Review of learning, intro
+
+	Supevised learning
+
+		Given some training data (x1, y1).. find y=f(x)
+		Example: Speech recognition
+
+	Unsupervised
+		
+		Given just data points (x1, x2).. find P(X=x)
+		Example: star clustering
+	
+	Reinforcement
+
+		States and actions (s,a) and rewards for states, find optimal policy
+		Example: Skinner box
+
+2.	Review of MDP
+
+	You have states and actions for each state and a state state
+
+		s E States
+		a E Actions(s)
+		s0
+	
+	Transition from one state to another is stocastic, a probability distribution
+
+		P(s1|s,a)
+
+	And a reward function for a state or transition
+	
+		R(s, a, s1)
+		R(s1)
+
+	Solving an MDP - maximize the discounted total reward
+
+		sum( g**t * R(st f(st), st+1))
+
+	Look at all possible actions, choose the best one according to the expected utility
+
+3.	What if you don't have the reward function or the transition function?
+
+	Utility based agent - you know p, try to learn R to find U
+
+	Q-learning agent - know nothing, learn Q(s,a). Utility of state-action pairs
+
+	Reflex agent - know nothing, learn policy f(s)
+
+4.	Passive v. active
+
+	Passive: agent has a fixed policy
+	Active:	policy changes as we go
+
+5.	Temporal difference
+
+	Fixed policy, when terminal back up to find utility of states
+
+	Track U(s) with backing up, track number of times state was visited N(s)
+
+		if s1 is new:
+			U[s1] <- r1
+		if s is not null:
+			N[s]++
+			U[s] <- U[s] + (l * (N[s])) * (R(s) + U(s1) - U(s))
+
+		where l is a learning variable,
+			N[s] is the number of times s has been visited,
+			U[s] is the current utility of s
+
+	Problems with this kind of passive learning - the same policy over and over again means a possible long convergence, missing states, poor estimate because of the first two.
+
+6.	Active reinforcement
+
+	Greedy reinforcement - recompute policy by solving MDP based on generated utility. Problem is that it can be stuck in local minima. When it finds any policy that seems to work, it tends to stay on it. Needs some randomness for exploration, but that can be slow.
+
+	Consider what we are doing. We are updating the policy in response to updating the utility of various visited states, and the number of times the state has been visited. The issues that might come up include
+
+		The utility of some state may be wrong because we haven't visited it enough
+		The utility could be off because the policy was off
+
+	You can solve this problem by making unvisited states really high in value for some number of visits (exploration value e). This means there is a baseline number of minimum visits. This vastly improves the algorithm.
+
+7.	Q Learning
+
+	What happens when we have the transition model? This bit that tells you the probability of your action gets to state s1
+
+		P(s1|s,a)
+
+	We can't even use the policy if this isn't known. In Q learning, we don't use the transition model at all. This
+
+		V(s) = max( sum([P(s1|s,a) * U(s1)] for s1 in successor_states) )
+
+	Turns into this
+
+		V(s) = max( sum([Q(s,a) for s,a in states,actions]) )
+
+	The update formula is this
+
+		Q(s,a) <- Q(s,a) + (l * (R(s) + (d * (Q(s1, a1) - Q(s, a)))))
+		
+		where d is the discount factor and l is the learning factor 
+
+#	Hidden Markov models
+
+1.	All about time series
+
+	State transitions and sensing of them. Think of it like a bayes network
+
+	S1 -> S2 -> S3 .... SN
+
+	With each having a measure that is dependent on the state. They call this a Markov Chain. If this reminds you of a state machine, you aren't crazy.
+
+2.	Markov chains
+
+	Consider a Markov Chain with the transitions
+
+		R -> S = 0.4
+		R -> R = 0.6
+		S -> S = 0.8
+		S -> R = 0.2
+
+	Suppose you started in R
+
+		P(R0) = 1
+	
+	The probability of being in R at subsequent time series is easy for the first bit. Starting and staying at R
+
+		P(R1) = P(R->R)
+		P(R1) = 0.6
+
+	But subsequent states have to consider all of the possible ways to be in that state.
+
+		P(R2) 	= P(R2|R1) * P(R1) + P(R2|S1) * P(S1)
+				= 0.6 * 0.6 + 0.4 * 0.2
+				= 0.44
+
+	And
+
+		P(R3) 	= P(R3|R2) * P(R2) + P(R3|S2) * P(S2)
+				= 0.6 * 0.44 + (1-0.44) * 0.2
+				= 0.376
+
+	A little more complicated, but notice the pattern. Look at another chain
+
+		A -> B = 0.5
+		R -> R = 0.5
+		B -> B = 0
+		B -> R = 1
+	
+		P(A1) 	= 0.5
+		
+		P(A2) 	= P(A2|A1) * P(A1) + P(A2|B1) * P(B1)
+				= 0.5 * 0.5 + 1 * 0.5
+				= 0.75
+		
+		P(A3)	= P(A3|A2) * P(A2) + P(A3|B2) * P(B2)
+				= 0.5 * 0.75 + 1 * (1-0.75)
+	
+3.	Stationary distribution
+
+	Okay, what about probability generally. What happens when in really far off timespans? We generalize the stuff above to
+
+		P(A_t) =  P(A_t-1)
+
+		P(A_t|A_t-1) * P(A_t-1) + P(A_t|B_t-1) * P(B_t-1)
+
+	Now this isn't new at all. This is just putting into an equasion the same thing you were doing above. The probability of some state at some time is a function of the probability of the previous state. The essense of a Markov Chain.
+
+	Now we solve for the previous problem. Let P(A_t-1) = x
+
+		x = 0.5 * x + 1 * (1-x)
+		x = 2/3
+
+	So, as time approaches infinity, the P(A) = 2/3
+
+	Consider the problem previous to that one.
+
+		R -> S = 0.4
+		R -> R = 0.6
+		S -> S = 0.8
+		S -> R = 0.2
+
+	P(R->inf) = P(R_t|R_t-1) * P(R_t-1) + P(R_t|S_t-1) * P(S_t-1)
+	x 	= 0.6 * x + 0.2 * (1-x)
+		= 0.4x + 0.2
+	0.6x= 0.2
+	x	= 0.3333
+
+4.	Finding the probabilities
+
+	Consider the sequence R->S->S->S->R->S->R. How would you find the probabilities. Well consider what you can say immediately. It starts at R.
+
+		P(R0) = 1
+
+	And it never stays at R. From R it always shifts to S
+
+		P(S|R) = 1
+		P(R|R) = 0
+
+	Just using max likelihood, getting the rest of the probabilities is a snap.
+
+		P(S|S) = 0.5
+		P(R|S) = 0.5
+
+	Simple as that.
+
+5.	By observation
+
+	The states are almost always hidden - hence hidden markov model. What is more likely is you have some sensor to tell you some conditional probability related to the states.
+
+
+	

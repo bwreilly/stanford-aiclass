@@ -74,6 +74,27 @@ def qloss(xs, ys):
 	print("w0 = " + str(w0) + " w1 = " + str(w1))
 	return w1, w0
 
+def valueiteration(s, discount=0):
+	"""Look at all possible actions from state s, choose the best one according
+	to the expected utility: sum( P(s1|s,a) * utility(s1) ), where s1 is a 
+	successor state
+	"""
+	suc = s.successors
+	def expectedvalue(action):
+		states = action.possiblestates
+		return sum([s.reward * s.probability for s in states])
+	return max([expectedvalue(a) for a in s.actions]) + s.reward
+
+class State(object):
+	def __init__(successors, actions, reward):
+		successors = successors
+		actions = actions
+		reward = reward
+
+class Action(object):
+	def __init__(possiblestates):
+		possiblestates = possiblestates
+
 spam = ["offer is secret", "click secret link", "secret sports link"]
 ham = [
 	"play sports today",
@@ -84,13 +105,9 @@ ham = [
 ]
 email = "today is secret"
 
-
-
 # movie = ["a perfect world", "my perfect woman", "pretty woman"]
 # song = ["a perfect day", "electric storm", "another rainy day"]
 # query = "perfect storm"
 # print laplace(query, movie, song, 1)
 #print lspamham(movie, 3, song, 3, "perfect" , 1)
 #print lspamham(movie, 3, song, 3, "storm" , 1)
-
-
