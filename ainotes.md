@@ -16,7 +16,7 @@
 
 	Example: five heads in a row with a fair coin = 0.5 * 0.5 * 0.5 * 0.5 * 0.5 = 0.5**5.
 
-3.	Considering many paths to reach a similar conclusion, you can add the combined 		probabilities of each branch. 
+3.	Considering many paths to reach a similar conclusion, you can add the combined probabilities of each branch. 
 
 
 ##	Bayesian analysis
@@ -1045,5 +1045,65 @@ Dealing with contineous quantities. Like predicting the temperature.
 
 	The states are almost always hidden - hence hidden markov model. What is more likely is you have some sensor to tell you some conditional probability related to the states.
 
+#	Computer vision
 
+1.	Image formation
+
+	There exists a simple relationship between the focal length, distance of an object from the camera, and the height of the object. 
+
+	Let X be the height of the object, and -x be the inverse image projected onto the chip (or film). Let f be the focal length, and Z be the distance of the object from the camera. Equal triangles mean the ratio of the focal length-top of projected object-bottom of projected object is the same as the larger triangle composed of the actual top and bottom of the object and the distance from the camera.
+
+		X/Z = x/f
 	
+	Frequently, you want to solve for x (the height of the projected object)
+
+		x = X * f/z
+
+	This equasion is known as perspective projection.
+
+2.	Invariance
+
+	Computer vision programs must be able to deal with certain invariants - stuff that doesn't change the nature of the object in question but can make it appear slightly different. Here are examples:
+
+	*	Rotation
+	*	Scale: how large the object is relative to the camera
+	*	Deformation: parts of the object are deformable, like helicopter rotors
+	*	Illumination
+	*	Occlusion: Partially covered up objects, but you should be able to recognize them
+	*	Viewpoint: Maybe the most difficult. Different vantage points of an object can make a significant difference in object appearance
+
+3.	Greyscale images
+
+	Often easier to deal with. Raster images.
+
+4.	Feature extraction
+
+	Compare pixel values in a local neighborhood. Simplest one is two-pixel compare run over the whole image, then subtracting the two values. The two pixel mask or neighborhood is also called a kernel, and denoted with g.
+
+	The mechanism is basically functional. The kernel values are inputs for a final value to go into the pixel under scrutiny. This whole operation is called a Linear Filter.
+
+5.	Linear filters
+
+	There is a simple equasion for linear filters. 
+
+	Let I be some image, g some kernel or neighborhood, and for a two-pixel kernel let u and v denote the pixels under consideration, and I_1(x,y) are the new pixels x and y in the filtered image I_1.
+
+		I_1(x,y) = sum(u,v) I(x-u, y-v) * g(u,v)
+
+	This is the exact operation as described in 4. And is actually very simple, consider the following:
+
+		I =	[(245, 2, 7),
+		 	 (234, 4, 5),
+		 	 (199, 5, 8)]
+		
+		g = [1, -1]
+
+	The operation here would be simple. Iterate though the pixels in I. For each pixel, the new value is the sum of g applied to the given pixel and its left neighbor. So the first value, 245, would be 245-2. Running the filter for the whole image gives you this.
+
+		I_1 =	[(243, -5),
+		 	 	 (230, -1),
+		 	 	 (194, -3)]
+
+	The edge that clearly existed is now even more pronounced. 
+
+	A function is linear if the resulting pixels of the processed image is a linear combination of input pixels
